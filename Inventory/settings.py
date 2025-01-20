@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'manager',
 ]
 
 MIDDLEWARE = [
@@ -73,13 +74,16 @@ WSGI_APPLICATION = 'Inventory.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = {
+DATABASES = { 
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+        'ENGINE': 'djongo', 
+        'NAME': 'inventory_management',
+        'CLIENT': {
+        'host': 'localhost',  # MongoDB host
+        'port': 27017,        # MongoDB port
+        }, 
+    } 
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
