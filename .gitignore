@@ -1,0 +1,114 @@
+# Django specific
+*.log
+*.pot
+*.pyc
+__pycache__/
+db.sqlite3
+media/
+staticfiles/
+
+# If using SQLite database
+*.sqlite3
+
+# Django secret key and settings
+.env
+
+# Python specific
+*.py[cod]
+*$py.class
+.Python
+.env
+.python-version
+
+# IDEs and editors
+.idea/
+.vscode/
+*.swp
+*~
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.so
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# PyInstaller
+# Usually these files are written by a python script from a template
+# before PyInstaller builds the exe, so as to inject date/other infos into it.
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Test files
+.coverage
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.tox/
+.pytest_cache/
+
+# MyPy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Celery
+celerybeat-schedule
+celerybeat.pid
+
+# Django stuff:
+local_settings.py
+
+# Translations
+*.mo
+*.pot
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# AWS Elastic Beanstalk
+.elasticbeanstalk/
+
+# PyCharm
+.idea/
+
+# Heroku
+*.env
+Procfile
+
+# Docker
+*.env
+.dockerignore
+docker-compose.yml
+docker-compose.override.yml
+
+# Sphinx documentation
+docs/_build/
+
+# Pyre type checker
+.pyre/
