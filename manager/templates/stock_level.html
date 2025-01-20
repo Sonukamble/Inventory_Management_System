@@ -1,0 +1,27 @@
+{% extends 'base.html'%}
+{% block body %}
+<h1>Current Stock Levels</h1>
+<table>
+    <thead>
+        <tr>
+            <th>Product Name</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Stock Quantity</th>
+            <th>Supplier</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for product in product_stock_info %}
+        <tr>
+            <td>{{ product.name }}</td>
+            <td>{{ product.category }}</td>
+            <td>{{ product.price }}</td>
+            <td>{{ product.stock_quantity }}</td>
+            <td>{{ product.supplier }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

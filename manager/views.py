@@ -65,3 +65,17 @@ def AddStockMovement(request):
 
     form = StockMovementForm()
     return render(request, 'stock_movement.html', {'form':form})
+
+def CheckStockLevel(request):
+    products= Product.objects.all()
+
+    product_stock_info=[]
+    for product in products:
+        product_stock_info.append({
+            'name': product.name,
+            'stock_quantity': product.stock_quantity,
+            'category': product.category,
+            'price': product.price,
+            'supplier': product.supplier.name if product.supplier else "No Supplier"
+        })
+    return render(request,'stock_level.html',{'product_stock_info': product_stock_info})
