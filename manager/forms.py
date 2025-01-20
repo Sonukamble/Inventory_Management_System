@@ -1,6 +1,6 @@
 from django.forms import ModelForm
 from django import forms
-from .models import Supplier,Product
+from .models import Supplier,Product, StockMovement
 
 import re
 
@@ -37,3 +37,14 @@ class ProductForm(ModelForm):
             raise forms.ValidationError("Product with this name already exists.")
         # super().clean()
         return name
+    
+class StockMovementForm(ModelForm):
+    class Meta:
+        model = StockMovement
+        fields = ['product', 'quantity', 'movement_type', 'notes']
+
+    def clean_quantity(self):
+        quantity= self.cleaned_data.get('quantity')
+        if not quantity > 0:
+            raise forms.ValidationError("Quantity must be greater than 0")
+        return quantity

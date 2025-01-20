@@ -7,4 +7,6 @@ urlpatterns = [
 
     path('product/add/', views.AddProduct , name='add_product'),
     path('product/list/', views.ProductList , name='product_list'),
+
+    path('stock_movement/',views.AddStockMovement, name='stock_movement'),
 ]

@@ -1,6 +1,9 @@
 from django.shortcuts import render, redirect
-from .forms import SupplierForm, ProductForm
-from .models import Supplier,Product
+from .forms import SupplierForm, ProductForm, StockMovementForm
+from .models import Supplier,Product, StockMovement
+
+from decimal import Decimal
+from bson import Decimal128
 # Create your views here.
 
 def AddSupplier(request):
@@ -35,3 +38,30 @@ def AddProduct(request):
 def ProductList(request):
     products = Product.objects.all()
     return render(request,'products/list.html',{'products':products})
+
+
+def AddStockMovement(request):
+    if request.method == 'POST':
+        form = StockMovementForm(request.POST)
+        if form.is_valid():
+            stock_movement=form.save(commit=False)
+            # Convert Decimal128 to Decimal if the price is in Decimal128 format
+            if isinstance(stock_movement.product.price, Decimal128):
+                stock_movement.product.price = stock_movement.product.price.to_decimal()
+
+            # Ensure price is a valid Decimal type
+            stock_movement.product.price = Decimal(stock_movement.product.price)
+            
+            if stock_movement.movement_type =='In':
+                stock_movement.product.stock_quantity += stock_movement.quantity
+            if stock_movement.movement_type == 'Out':
+                stock_movement.product.stock_quantity -= stock_movement.quantity
+
+            stock_movement.product.save()
+            stock_movement.save()
+            return redirect('product_list')
+        else:
+            return render(request, 'stock_movement.html', {'form':form})
+
+    form = StockMovementForm()
+    return render(request, 'stock_movement.html', {'form':form})
