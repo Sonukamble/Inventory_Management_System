@@ -13,4 +13,8 @@ urlpatterns = [
 
     path('sale_order/create/', views.CreateSaleOrder , name='create-sale-order'),
     path('sale_order/list/',views.ListOfSaleOrders , name='sale_order_list'),
+
+    path('complete_saleorder/<int:order_id>/', views.CompleteSaleOrder , name='complete_sale_order'),
+    path('cancel_sale_order/<int:order_id>/', views.CancelSaleOrder, name='cancel_sale_order'),
+
 ]

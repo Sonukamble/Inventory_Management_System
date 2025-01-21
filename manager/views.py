@@ -1,7 +1,8 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .forms import SupplierForm, ProductForm, StockMovementForm, SaleOrderForm
 from .models import Supplier,Product, StockMovement, SalesOrder
 
+from django.http import JsonResponse
 
 from decimal import Decimal
 from bson import Decimal128
@@ -104,6 +105,11 @@ def CreateSaleOrder(request):
             if quantity > product.stock_quantity:
                 form.add_error('quantity', 'Not enough stock available.')
                 return render(request, 'sale_order/create.html', {'form': form})
+            
+            # Update the product stock after the sale
+            product.reserved_quantity += quantity
+            product.save()
+
 
             # create the sale order
             sale_order = form.save(commit=False)
@@ -122,3 +128,63 @@ def ListOfSaleOrders(request):
     orders = SalesOrder.objects.all()
     return render(request,'sale_order/list.html',{'orders':orders})
 
+def CompleteSaleOrder(request,order_id):
+    sale_order = get_object_or_404(SalesOrder, id=order_id)
+
+    if sale_order.status != 'pending':
+        messages.error(request, "Only pending orders can be completed.")
+        return redirect('sale_order_list')
+    
+    # Get the associated product and validate stock levels
+    product = sale_order.product
+    if sale_order.quantity > product.stock_quantity:
+        messages.error(request, "Insufficient stock to complete this order.")
+        return redirect('sale_order_list')
+    
+    if isinstance(product.price, Decimal128):
+        product.price = product.price.to_decimal()
+
+    product_price = Decimal(str(product.price))
+    product.stock_quantity -= sale_order.quantity
+    product.reserved_quantity -= sale_order.quantity
+    product.save()
+
+    # Mark the sale order as completed
+    if isinstance(sale_order.total_price, Decimal128):
+        sale_order.total_price = sale_order.total_price.to_decimal()
+
+    total_prices = Decimal(str(sale_order.total_price))
+    sale_order.total_price = total_prices
+    sale_order.status = "completed"
+    sale_order.save()
+
+    messages.success(request, f"Sale order #{sale_order.id} completed successfully!")
+    return redirect('sale_order_list')
+
+def CancelSaleOrder(request, order_id):
+
+    sale_order = get_object_or_404(SalesOrder, id=order_id)
+
+    if sale_order.status == 'cancelled':
+        messages.error(request,'This order is already cancelled.')
+        return redirect('sale_order_list')
+    
+    product = sale_order.product
+    if isinstance(product.price, Decimal128):
+        product.price = product.price.to_decimal()
+
+    product_price = Decimal(str(product.price))
+    product = sale_order.product
+    product.reserved_quantity -= sale_order.quantity
+    product.save()
+
+    if isinstance(sale_order.total_price, Decimal128):
+        sale_order.total_price = sale_order.total_price.to_decimal()
+    # Update the sale order status to cancelled
+    total_prices = Decimal(str(sale_order.total_price))
+    sale_order.total_price = total_prices
+    sale_order.status = "cancelled"
+    sale_order.save()
+
+    messages.success(request, f"Sale order #{sale_order.id} has been cancelled successfully!")
+    return redirect('sale_order_list')

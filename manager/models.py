@@ -17,6 +17,7 @@ class Product(models.Model):
     category = models.CharField(max_length=200)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     stock_quantity = models.IntegerField()
+    reserved_quantity = models.IntegerField(default=0)  # Add this field
     supplier = models.ForeignKey(Supplier,on_delete=models.CASCADE)
 
     def __str__(self):
