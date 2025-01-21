@@ -1,0 +1,9 @@
+{% extends 'base.html'%}
+{% block body %}
+    <h1>Create Sale Order</h1>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Create Sale Order</button>
+    </form>
+{% endblock %}

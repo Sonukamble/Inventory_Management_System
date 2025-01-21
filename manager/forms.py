@@ -1,6 +1,6 @@
 from django.forms import ModelForm
 from django import forms
-from .models import Supplier,Product, StockMovement
+from .models import Supplier,Product, StockMovement, SalesOrder
 
 import re
 
@@ -47,4 +47,17 @@ class StockMovementForm(ModelForm):
         quantity= self.cleaned_data.get('quantity')
         if not quantity > 0:
             raise forms.ValidationError("Quantity must be greater than 0")
+        return quantity
+    
+class SaleOrderForm(ModelForm):
+    class Meta:
+        model = SalesOrder
+        fields = ['product', 'quantity']
+
+    def clean_quantity(self):
+        quantity = self.cleaned_data.get('quantity')
+        product = self.cleaned_data.get('product')
+
+        if quantity > product.stock_quantity:
+            raise forms.ValidationError("Not enough stock available.")
         return quantity

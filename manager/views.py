@@ -1,9 +1,15 @@
 from django.shortcuts import render, redirect
-from .forms import SupplierForm, ProductForm, StockMovementForm
-from .models import Supplier,Product, StockMovement
+from .forms import SupplierForm, ProductForm, StockMovementForm, SaleOrderForm
+from .models import Supplier,Product, StockMovement, SalesOrder
+
 
 from decimal import Decimal
 from bson import Decimal128
+from django.contrib import messages
+from django.db import transaction
+
+
+from django.shortcuts import get_object_or_404
 # Create your views here.
 
 def AddSupplier(request):
@@ -79,3 +85,40 @@ def CheckStockLevel(request):
             'supplier': product.supplier.name if product.supplier else "No Supplier"
         })
     return render(request,'stock_level.html',{'product_stock_info': product_stock_info})
+
+def CreateSaleOrder(request):
+    if request.method == 'POST':
+        form = SaleOrderForm(request.POST)
+        if form.is_valid():
+            product = form.cleaned_data['product']
+            quantity = form.cleaned_data['quantity']
+
+            # Convert Decimal128 to Decimal if the price is in Decimal128 format
+            if isinstance(product.price, Decimal128):
+                product.price = product.price.to_decimal()
+
+            product_price = Decimal(str(product.price))
+            total_price = product_price * quantity
+
+            
+            if quantity > product.stock_quantity:
+                form.add_error('quantity', 'Not enough stock available.')
+                return render(request, 'sale_order/create.html', {'form': form})
+
+            # create the sale order
+            sale_order = form.save(commit=False)
+            sale_order.total_price= total_price
+            sale_order.status = 'pending'
+            sale_order.save()
+
+            return redirect('sale_order_list')
+        else:
+            return render(request,'sale_order/create.html',{'form': form})
+
+    form= SaleOrderForm()
+    return render(request,'sale_order/create.html',{'form': form})
+
+def ListOfSaleOrders(request):
+    orders = SalesOrder.objects.all()
+    return render(request,'sale_order/list.html',{'orders':orders})
+
