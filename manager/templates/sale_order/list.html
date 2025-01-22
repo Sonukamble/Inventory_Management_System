@@ -1,42 +1,51 @@
-{% extends 'base.html'%}
+{% extends 'base.html' %}
+
 {% block body %}
-<h2>Sale Orders List</h2>
-<table>
-    <thead>
-        <tr>
-            <th>Product Name</th>
-            <th>Quantity</th>
-            <th>Total Price</th>
-            <th>Sale Date</th>
-            <th>Status</th>
-            <th>Notes</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for order in orders %}
-        <tr>
-            <td>{{ order.product.name }}</td>
-            <td>{{ order.quantity }}</td>
-            <td>{{ order.total_price }}</td>
-            <td>{{ order.sale_date }}</td>
-            <td>{{ order.status }}</td>
-            <td>{{ order.notes }}</td>
-            <td>
-                {% if order.status == 'pending' %}
-                <a href="{% url 'complete_sale_order' order.id %}">Complete Order</a>
-                {% endif %}
-            </td>
-            <td>
-                {% if order.status != "cancelled" and order.status != 'completed' %}
-                <a href="{% url 'cancel_sale_order' order.id %}">Cancel Order</a>
-                {% endif %}
-            </td>
-        </tr>
-        {% empty %}
-        <tr>
-            <td colspan="6">No sale orders found.</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="container mx-auto py-8 px-4">
+    <h2 class="text-3xl font-semibold mb-6 text-center text-gray-800">Sale Orders List</h2>
+
+    <div class="overflow-x-auto bg-white shadow-lg rounded-lg">
+        <table class="min-w-full table-auto text-sm">
+            <thead class="bg-blue-600 text-white">
+                <tr>
+                    <th class="px-6 py-4 text-left font-medium">Product Name</th>
+                    <th class="px-6 py-4 text-left font-medium">Quantity</th>
+                    <th class="px-6 py-4 text-left font-medium">Total Price</th>
+                    <th class="px-6 py-4 text-left font-medium">Sale Date</th>
+                    <th class="px-6 py-4 text-left font-medium">Status</th>
+                    <th class="px-6 py-4 text-left font-medium">Notes</th>
+                    <th class="px-6 py-4 text-left font-medium">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr class="border-b hover:bg-gray-50 transition-all duration-300 ease-in-out">
+                    <td class="px-6 py-4 text-gray-700">{{ order.product.name }}</td>
+                    <td class="px-6 py-4 text-gray-700">{{ order.quantity }}</td>
+                    <td class="px-6 py-4 text-gray-700">{{ order.total_price }}</td>
+                    <td class="px-6 py-4 text-gray-700">{{ order.sale_date }}</td>
+                    <td class="px-6 py-4 text-gray-700">{{ order.status }}</td>
+                    <td class="px-6 py-4 text-gray-700">{{ order.notes }}</td>
+                    <td class="px-6 py-4">
+                        {% if order.status == 'pending' %}
+                        <a href="{% url 'complete_sale_order' order.id %}"
+                            class="text-blue-500 hover:text-blue-700 font-bold">Complete Order</a>
+                        {% endif %}
+                    </td>
+                    <td class="px-6 py-4">
+                        {% if order.status != "cancelled" and order.status != 'completed' %}
+                        <a href="{% url 'cancel_sale_order' order.id %}"
+                            class="text-red-500 hover:text-red-700 font-bold">Cancel Order</a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="8" class="text-center text-gray-500 py-4">No sale orders found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 {% endblock %}

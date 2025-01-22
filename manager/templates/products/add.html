@@ -1,11 +1,66 @@
-{% extends 'base.html'%}
+{% extends 'base.html' %}
+
 {% block body %}
-<h2>Add New Product</h2>
+<div class="min-h-screen flex items-center justify-center bg-gray-100 py-8 px-4">
 
-<form class="form-container" method="post">
-    {% csrf_token %}
-    {{form}}
-    <button type="submit" class="p-10">Add</button>
-</form>
+    <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full max-w-lg">
+        <h2 class="text-2xl font-bold mb-6 text-center">Add New Product</h2>
 
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-4">
+                <label for="id_name" class="block text-gray-700 text-sm font-bold mb-2">Name:</label>
+                <input id="id_name" name="name" type="text"
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+            </div>
+
+            <div class="mb-4">
+                <label for="id_description" class="block text-gray-700 text-sm font-bold mb-2">Description:</label>
+                <textarea id="id_description" name="description" rows="4"
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"></textarea>
+            </div>
+
+            <div class="mb-4">
+                <label for="id_category" class="block text-gray-700 text-sm font-bold mb-2">Category:</label>
+                <input id="id_category" name="category" type="text"
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+            </div>
+
+            <div class="mb-4">
+                <label for="id_price" class="block text-gray-700 text-sm font-bold mb-2">Price:</label>
+                <input id="id_price" name="price" type="number" step="0.01"
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+            </div>
+
+            <div class="mb-4">
+                <label for="id_stock_quantity" class="block text-gray-700 text-sm font-bold mb-2">Stock
+                    Quantity:</label>
+                <input id="id_stock_quantity" name="stock_quantity" type="number"
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+            </div>
+
+            <div class="mb-4">
+                <label for="id_reserved_quantity" class="block text-gray-700 text-sm font-bold mb-2">Reserved
+                    Quantity:</label>
+                <input id="id_reserved_quantity" name="reserved_quantity" type="number"
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+            </div>
+
+            <div class="mb-4">
+                <label for="id_supplier" class="block text-gray-700 text-sm font-bold mb-2">Supplier:</label>
+                <select id="id_supplier" name="supplier"
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    {% for supplier in suppliers %}
+                    <option value="{{ supplier.id }}">{{ supplier.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full">
+                Add
+            </button>
+        </form>
+    </div>
+
+</div>
 {% endblock %}
